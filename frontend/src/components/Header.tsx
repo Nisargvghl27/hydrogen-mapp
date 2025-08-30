@@ -9,10 +9,10 @@ const Header = () => {
 
   const navigation = [
     { name: "Platform", href: "/platform" },
+    { name: "Demo", href: "/demo" },
+    { name: "Documentation", href: "/documentation" },
     { name: "Features", href: "#features" },
-    { name: "Use Cases", href: "#use-cases" },
-    { name: "Data", href: "#data" },
-    { name: "Documentation", href: "#docs" }
+    { name: "Use Cases", href: "#use-cases" }
   ];
 
   const handleNavigation = (href: string) => {
