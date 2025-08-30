@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup, Circle } from "react-leaflet";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -82,6 +83,7 @@ const efficiencyData = [
 
 const Platform = () => {
   const [selectedSite, setSelectedSite] = useState<InfrastructureSite | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log("Platform component mounted");
@@ -333,7 +335,7 @@ const Platform = () => {
                     Add Infrastructure Site
                     <MapPin className="w-5 h-5 group-hover:scale-110 transition-transform ml-2" />
                   </Button>
-                  <Button variant="outline" size="lg">
+                  <Button variant="outline" size="lg" onClick={() => navigate("/documentation")}>
                     View Documentation
                   </Button>
                 </div>
