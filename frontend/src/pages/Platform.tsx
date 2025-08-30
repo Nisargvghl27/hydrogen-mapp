@@ -101,7 +101,7 @@ const Platform = () => {
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground mb-6">
               Hydrogen Infrastructure
               <span className="block bg-gradient-to-r from-hydrogen-green to-tech-blue bg-clip-text text-transparent">
-                Mapping Platform
+                MAPPING Platform
               </span>
             </h1>
             

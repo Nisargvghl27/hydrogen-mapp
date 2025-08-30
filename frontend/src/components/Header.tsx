@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Zap, Menu } from "lucide-react";
+import { Zap, Menu, Mail } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -9,10 +9,10 @@ const Header = () => {
 
   const navigation = [
     { name: "Platform", href: "/platform" },
-    { name: "Features", href: "#features" },
     { name: "Use Cases", href: "#use-cases" },
     { name: "Data", href: "#data" },
-    { name: "Documentation", href: "#docs" }
+    { name: "Documentation", href: "#docs" },
+    { name: "Contact Us", href: "#footer" }
   ];
 
   const handleNavigation = (href: string) => {
@@ -23,7 +23,7 @@ const Header = () => {
       // Handle anchor links
       const element = document.querySelector(href);
       if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
       setIsMenuOpen(false);
     }
@@ -50,9 +50,14 @@ const Header = () => {
               <button
                 key={item.name}
                 onClick={() => handleNavigation(item.href)}
-                className="text-muted-foreground hover:text-foreground transition-colors font-medium"
+                className={`transition-all duration-300 font-medium flex items-center space-x-2 ${
+                  item.name === "Contact Us" 
+                    ? "text-hydrogen-green hover:text-hydrogen-green/80 hover:scale-105" 
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
               >
-                {item.name}
+                {item.name === "Contact Us" && <Mail className="w-4 h-4" />}
+                <span>{item.name}</span>
               </button>
             ))}
           </nav>
@@ -74,9 +79,14 @@ const Header = () => {
                 <button
                   key={item.name}
                   onClick={() => handleNavigation(item.href)}
-                  className="text-left text-muted-foreground hover:text-foreground transition-colors font-medium"
+                  className={`text-left transition-all duration-300 font-medium flex items-center space-x-2 ${
+                    item.name === "Contact Us" 
+                      ? "text-hydrogen-green hover:text-hydrogen-green/80 hover:scale-105" 
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
                 >
-                  {item.name}
+                  {item.name === "Contact Us" && <Mail className="w-4 h-4" />}
+                  <span>{item.name}</span>
                 </button>
               ))}
             </nav>
