@@ -1,7 +1,11 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Zap, Mail, Phone, MapPin, Github, Linkedin, Twitter } from "lucide-react";
+import { Zap, Mail, Phone, MapPin, Github, Linkedin, Twitter, CheckCircle } from "lucide-react";
 
 const Footer = () => {
+  const [email, setEmail] = useState("");
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const footerSections = [
     {
       title: "Platform",
@@ -46,6 +50,20 @@ const Footer = () => {
     { icon: Linkedin, href: "#linkedin", label: "LinkedIn" },
     { icon: Twitter, href: "#twitter", label: "Twitter" }
   ];
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    
+    setIsLoading(true);
+    
+    // Simulate API call
+    setTimeout(() => {
+      setIsSubscribed(true);
+      setIsLoading(false);
+      setEmail("");
+    }, 1000);
+  };
 
   return (
     <footer id="footer" className="bg-data-navy text-white">
@@ -113,16 +131,31 @@ const Footer = () => {
                 Get the latest updates on hydrogen infrastructure developments and platform features.
               </p>
             </div>
-            <div className="flex space-x-3">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-hydrogen-green"
-              />
-              <Button variant="success" size="sm">
-                Subscribe
-              </Button>
-            </div>
+            {isSubscribed ? (
+              <div className="flex items-center space-x-3 bg-hydrogen-green/20 border border-hydrogen-green/30 rounded-lg p-4">
+                <CheckCircle className="w-5 h-5 text-hydrogen-green" />
+                <span className="text-hydrogen-green font-medium">Successfully subscribed!</span>
+              </div>
+            ) : (
+              <form onSubmit={handleSubscribe} className="flex space-x-3">
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="flex-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-hydrogen-green"
+                  required
+                />
+                <Button 
+                  variant="success" 
+                  size="sm" 
+                  type="submit"
+                  disabled={isLoading || !email}
+                >
+                  {isLoading ? "Subscribing..." : "Subscribe"}
+                </Button>
+              </form>
+            )}
           </div>
         </div>
       </div>

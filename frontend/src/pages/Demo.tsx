@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup, Circle } from "react-leaflet";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MapPin, TrendingUp, Zap, Target, Database, Activity, Play, Pause, Sparkles } from "lucide-react";
+import { MapPin, TrendingUp, Zap, Target, Database, Activity, Sparkles } from "lucide-react";
 
 import "leaflet/dist/leaflet.css";
 
@@ -129,7 +130,7 @@ const demoEfficiencyData = [
 
 const Demo = () => {
   const [selectedSite, setSelectedSite] = useState<DemoInfrastructureSite | null>(null);
-  const [isDemoRunning, setIsDemoRunning] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log("Demo component mounted");
@@ -177,16 +178,6 @@ const Demo = () => {
               Interactive demonstration of hydrogen infrastructure mapping capabilities. 
               Explore real-time data visualization and analytics with sample infrastructure sites.
             </p>
-
-            <Button
-              variant={isDemoRunning ? "destructive" : "hero"}
-              size="lg"
-              onClick={() => setIsDemoRunning(!isDemoRunning)}
-              className="group"
-            >
-              {isDemoRunning ? <Pause className="h-5 w-5 mr-2" /> : <Play className="h-5 w-5 mr-2" />}
-              {isDemoRunning ? "Stop Demo" : "Start Demo"}
-            </Button>
           </div>
 
           {/* Stats Cards */}
@@ -448,13 +439,15 @@ const Demo = () => {
                   This is a demonstration of the hydrogen infrastructure mapping platform. 
                   The data shown is for illustrative purposes only and represents sample infrastructure sites.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button variant="hero" size="lg" className="group">
+                <div className="flex justify-center">
+                  <Button 
+                    variant="hero" 
+                    size="lg" 
+                    className="group"
+                    onClick={() => navigate('/platform')}
+                  >
                     Access Full Platform
                     <MapPin className="w-5 h-5 group-hover:scale-110 transition-transform ml-2" />
-                  </Button>
-                  <Button variant="outline" size="lg">
-                    Learn More
                   </Button>
                 </div>
               </div>

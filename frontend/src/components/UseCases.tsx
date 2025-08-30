@@ -152,11 +152,6 @@ const UseCases = () => {
                   Multi-dimensional evaluation of all critical factors for informed decision making
                 </div>
               </div>
-              
-              <Button variant="data" size="lg" className="w-full">
-                Start Analysis
-                <ArrowRight className="w-5 h-5" />
-              </Button>
             </div>
           </div>
         </div>

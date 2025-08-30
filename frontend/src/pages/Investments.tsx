@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -7,6 +8,22 @@ import { useNavigate } from "react-router-dom";
 
 const Investments = () => {
   const navigate = useNavigate();
+  
+  // Investment calculator state
+  const [calculatorData, setCalculatorData] = useState({
+    initialInvestment: 1000000,
+    annualReturn: 15,
+    investmentPeriod: 10
+  });
+  
+  const [calculatedResults, setCalculatedResults] = useState({
+    totalReturn: 0,
+    annualReturnAmount: 0,
+    paybackPeriod: 0,
+    roi: 0
+  });
+  
+  const [hasCalculated, setHasCalculated] = useState(false);
   
   const investmentMetrics = [
     {
@@ -91,6 +108,40 @@ const Investments = () => {
     { sector: "Distribution", percentage: 20, color: "text-success-emerald" },
     { sector: "Transport", percentage: 10, color: "text-hydrogen-dark" }
   ];
+
+  // Investment calculator functions
+  const calculateReturns = () => {
+    const { initialInvestment, annualReturn, investmentPeriod } = calculatorData;
+    
+    // Calculate total return using compound interest formula
+    const totalReturn = initialInvestment * Math.pow(1 + annualReturn / 100, investmentPeriod);
+    
+    // Calculate annual return amount
+    const annualReturnAmount = (totalReturn - initialInvestment) / investmentPeriod;
+    
+    // Calculate payback period (years to recover initial investment)
+    const paybackPeriod = initialInvestment / annualReturnAmount;
+    
+    // Calculate ROI percentage
+    const roi = ((totalReturn - initialInvestment) / initialInvestment) * 100;
+    
+    setCalculatedResults({
+      totalReturn: Math.round(totalReturn),
+      annualReturnAmount: Math.round(annualReturnAmount),
+      paybackPeriod: Math.round(paybackPeriod * 10) / 10, // Round to 1 decimal place
+      roi: Math.round(roi * 10) / 10 // Round to 1 decimal place
+    });
+    
+    setHasCalculated(true);
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    const numValue = parseFloat(value) || 0;
+    setCalculatorData(prev => ({
+      ...prev,
+      [field]: numValue
+    }));
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary/30">
@@ -204,13 +255,10 @@ const Investments = () => {
                         <span className="font-medium text-foreground ml-1">{opportunity.payback}</span>
                       </div>
                     </div>
-                    <div className="flex items-center justify-between mt-3">
+                    <div className="flex items-center justify-start mt-3">
                       <Badge variant="outline" className="text-xs">
                         Risk: {opportunity.risk}
                       </Badge>
-                      <Button size="sm" variant="outline">
-                        View Details
-                      </Button>
                     </div>
                   </div>
                 ))}
@@ -287,60 +335,100 @@ const Investments = () => {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-sm font-medium text-foreground mb-2 block">Initial Investment</label>
-                    <div className="relative">
-                      <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                      <input
-                        type="number"
-                        placeholder="1,000,000"
-                        className="w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-background focus:ring-2 focus:ring-hydrogen-green focus:border-transparent"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-foreground mb-2 block">Expected Annual Return (%)</label>
-                    <input
-                      type="number"
-                      placeholder="15"
-                      className="w-full px-4 py-2 border border-border rounded-lg bg-background focus:ring-2 focus:ring-hydrogen-green focus:border-transparent"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-foreground mb-2 block">Investment Period (Years)</label>
-                    <input
-                      type="number"
-                      placeholder="10"
-                      className="w-full px-4 py-2 border border-border rounded-lg bg-background focus:ring-2 focus:ring-hydrogen-green focus:border-transparent"
-                    />
-                  </div>
-                  <Button className="w-full" variant="hero">
-                    Calculate Returns
-                  </Button>
-                </div>
+                                 <div className="space-y-4">
+                   <div>
+                     <label className="text-sm font-medium text-foreground mb-2 block">Initial Investment</label>
+                     <div className="relative">
+                       <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                       <input
+                         type="number"
+                         placeholder="1,000,000"
+                         value={calculatorData.initialInvestment}
+                         onChange={(e) => handleInputChange('initialInvestment', e.target.value)}
+                         className="w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-background focus:ring-2 focus:ring-hydrogen-green focus:border-transparent"
+                       />
+                     </div>
+                   </div>
+                   <div>
+                     <label className="text-sm font-medium text-foreground mb-2 block">Expected Annual Return (%)</label>
+                     <input
+                       type="number"
+                       placeholder="15"
+                       value={calculatorData.annualReturn}
+                       onChange={(e) => handleInputChange('annualReturn', e.target.value)}
+                       className="w-full px-4 py-2 border border-border rounded-lg bg-background focus:ring-2 focus:ring-hydrogen-green focus:border-transparent"
+                     />
+                   </div>
+                   <div>
+                     <label className="text-sm font-medium text-foreground mb-2 block">Investment Period (Years)</label>
+                     <input
+                       type="number"
+                       placeholder="10"
+                       value={calculatorData.investmentPeriod}
+                       onChange={(e) => handleInputChange('investmentPeriod', e.target.value)}
+                       className="w-full px-4 py-2 border border-border rounded-lg bg-background focus:ring-2 focus:ring-hydrogen-green focus:border-transparent"
+                     />
+                   </div>
+                   <Button 
+                     className="w-full" 
+                     variant="hero"
+                     onClick={calculateReturns}
+                     disabled={!calculatorData.initialInvestment || !calculatorData.annualReturn || !calculatorData.investmentPeriod}
+                   >
+                     Calculate Returns
+                   </Button>
+                 </div>
                 
-                <div className="bg-secondary/30 rounded-lg p-6">
-                  <h4 className="font-semibold text-foreground mb-4">Projected Results</h4>
-                  <div className="space-y-3">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Total Return:</span>
-                      <span className="font-medium text-foreground">$4,045,558</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Annual Return:</span>
-                      <span className="font-medium text-foreground">$404,556</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Payback Period:</span>
-                      <span className="font-medium text-foreground">6.7 years</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">ROI:</span>
-                      <span className="font-medium text-success-emerald">404.6%</span>
-                    </div>
-                  </div>
-                </div>
+                                 <div className="bg-secondary/30 rounded-lg p-6">
+                   <h4 className="font-semibold text-foreground mb-4">Projected Results</h4>
+                   {hasCalculated ? (
+                     <div className="space-y-3">
+                       <div className="flex justify-between">
+                         <span className="text-muted-foreground">Total Return:</span>
+                         <span className="font-medium text-foreground">
+                           ${calculatedResults.totalReturn.toLocaleString()}
+                         </span>
+                       </div>
+                       <div className="flex justify-between">
+                         <span className="text-muted-foreground">Annual Return:</span>
+                         <span className="font-medium text-foreground">
+                           ${calculatedResults.annualReturnAmount.toLocaleString()}
+                         </span>
+                       </div>
+                       <div className="flex justify-between">
+                         <span className="text-muted-foreground">Payback Period:</span>
+                         <span className="font-medium text-foreground">
+                           {calculatedResults.paybackPeriod} years
+                         </span>
+                       </div>
+                       <div className="flex justify-between">
+                         <span className="text-muted-foreground">ROI:</span>
+                         <span className="font-medium text-success-emerald">
+                           {calculatedResults.roi}%
+                         </span>
+                       </div>
+                     </div>
+                   ) : (
+                     <div className="space-y-3 text-muted-foreground">
+                       <div className="flex justify-between">
+                         <span>Total Return:</span>
+                         <span>--</span>
+                       </div>
+                       <div className="flex justify-between">
+                         <span>Annual Return:</span>
+                         <span>--</span>
+                       </div>
+                       <div className="flex justify-between">
+                         <span>Payback Period:</span>
+                         <span>--</span>
+                       </div>
+                       <div className="flex justify-between">
+                         <span>ROI:</span>
+                         <span>--</span>
+                       </div>
+                     </div>
+                   )}
+                 </div>
               </div>
             </CardContent>
           </Card>
