@@ -1,8 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { MapPin, Zap, Target, TrendingUp } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import heroImage from "@/assets/hero-hydrogen-infrastructure.jpg";
 
 const Hero = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden py-12 sm:py-16 lg:py-20">
       {/* Background Image with Overlay */}
@@ -38,7 +41,12 @@ const Hero = () => {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4">
-            <Button variant="hero" size="lg" className="group">
+            <Button 
+              variant="hero" 
+              size="lg" 
+              className="group"
+              onClick={() => navigate('/platform')}
+            >
               Access Platform
               <MapPin className="w-5 h-5 group-hover:scale-110 transition-transform" />
             </Button>
@@ -46,6 +54,7 @@ const Hero = () => {
               variant="ghost" 
               size="lg" 
               className="border border-white/30 text-white bg-transparent hover:bg-white/10 hover:text-white hover:border-white/50 transition-all duration-300"
+              onClick={() => navigate('/demo')}
             >
               View Demo
             </Button>
@@ -54,15 +63,15 @@ const Hero = () => {
           {/* Key Stats */}
           <div className="grid grid-cols-3 gap-6 pt-8 border-t border-white/20">
             <div className="text-center">
-              <div className="text-2xl font-bold text-hydrogen-green">500+</div>
+              <div className="text-2xl font-bold text-hydrogen-green">0</div>
               <div className="text-sm text-white/80">Infrastructure Sites</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-tech-blue">25+</div>
+              <div className="text-2xl font-bold text-tech-blue">0</div>
               <div className="text-sm text-white/80">Data Layers</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-success-emerald">98%</div>
+              <div className="text-2xl font-bold text-success-emerald">0%</div>
               <div className="text-sm text-white/80">Accuracy Rate</div>
             </div>
           </div>
