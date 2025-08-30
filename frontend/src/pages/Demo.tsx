@@ -6,11 +6,25 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MapPin, TrendingUp, Zap, Target, Database, Activity, Play, Pause, Sparkles } from "lucide-react";
+
 import "leaflet/dist/leaflet.css";
+
+// Define types for demo infrastructure data
+interface DemoInfrastructureSite {
+  id: number;
+  name: string;
+  type: string;
+  lat: number;
+  lng: number;
+  capacity: number;
+  status: string;
+  efficiency: number;
+  production: number;
+}
 
 // Fix for default markers in react-leaflet
 import L from "leaflet";
-delete (L.Icon.Default.prototype as any)._getIconUrl;
+delete (L.Icon.Default.prototype as { _getIconUrl?: () => string })._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
   iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
@@ -18,7 +32,7 @@ L.Icon.Default.mergeOptions({
 });
 
 // Demo data for demonstration
-const demoInfrastructureData = [
+const demoInfrastructureData: DemoInfrastructureSite[] = [
   {
     id: 1,
     name: "Solar Hydrogen Plant - California",
@@ -63,11 +77,44 @@ const demoInfrastructureData = [
     efficiency: 88,
     production: 22,
   },
+  {
+    id: 5,
+    name: "Solar Hydrogen Plant - Arizona",
+    type: "Production",
+    lat: 33.4484,
+    lng: -112.0740,
+    capacity: 60,
+    status: "Operational",
+    efficiency: 91,
+    production: 54.6,
+  },
+  {
+    id: 6,
+    name: "Wind Hydrogen Facility - Colorado",
+    type: "Production",
+    lat: 39.7392,
+    lng: -104.9903,
+    capacity: 45,
+    status: "Operational",
+    efficiency: 83,
+    production: 37.35,
+  },
+  {
+    id: 7,
+    name: "Storage Hub - Michigan",
+    type: "Storage",
+    lat: 42.3314,
+    lng: -83.0458,
+    capacity: 80,
+    status: "Operational",
+    efficiency: 94,
+    production: 0,
+  },
 ];
 
 const demoChartData = [
-  { name: "Production", value: 123, color: "#10b981" },
-  { name: "Storage", value: 100, color: "#3b82f6" },
+  { name: "Production", value: 275, color: "#10b981" },
+  { name: "Storage", value: 180, color: "#3b82f6" },
   { name: "Distribution", value: 25, color: "#f59e0b" },
 ];
 
@@ -81,7 +128,7 @@ const demoEfficiencyData = [
 ];
 
 const Demo = () => {
-  const [selectedSite, setSelectedSite] = useState<any>(null);
+  const [selectedSite, setSelectedSite] = useState<DemoInfrastructureSite | null>(null);
   const [isDemoRunning, setIsDemoRunning] = useState(false);
 
   useEffect(() => {
@@ -202,23 +249,52 @@ const Demo = () => {
               </CardHeader>
               <CardContent>
                 <div className="h-96 w-full rounded-xl overflow-hidden border border-border/50">
-                  {/* Temporary map replacement for debugging */}
-                  <div style={{ 
-                    height: "100%", 
-                    width: "100%", 
-                    background: "linear-gradient(135deg, hsl(142 76% 36% / 0.1), hsl(221 83% 53% / 0.1))", 
-                    display: "flex", 
-                    alignItems: "center", 
-                    justifyContent: "center",
-                    border: "2px dashed hsl(142 76% 36% / 0.3)"
-                  }}>
-                    <div style={{ textAlign: "center" }}>
-                      <MapPin className="h-12 w-12 text-hydrogen-green mx-auto mb-4 opacity-50" />
-                      <h3 className="text-lg font-semibold text-foreground mb-2">Demo Map</h3>
-                      <p className="text-muted-foreground">{demoInfrastructureData.length} demo sites</p>
-                      <p className="text-sm text-muted-foreground mt-2">California, Texas, Illinois, New York</p>
-                    </div>
-                  </div>
+                  <MapContainer 
+                    center={[39.8283, -98.5795]} 
+                    zoom={4} 
+                    style={{ height: "100%", width: "100%" }}
+                  >
+                    <TileLayer
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    />
+
+                    {/* Render demo infrastructure markers */}
+                    {demoInfrastructureData.map((site) => (
+                      <Marker
+                        key={site.id}
+                        position={[site.lat, site.lng]}
+                        eventHandlers={{
+                          click: () => setSelectedSite(site),
+                        }}
+                      >
+                        <Popup>
+                          <div>
+                            <strong>{site.name}</strong><br/>
+                            Type: {site.type}<br/>
+                            Status: {site.status}<br/>
+                            Capacity: {site.capacity} MW<br/>
+                            Efficiency: {site.efficiency}%
+                            {site.production > 0 && (
+                              <>
+                                <br/>Production: {site.production} MW
+                              </>
+                            )}
+                          </div>
+                        </Popup>
+                      </Marker>
+                    ))}
+
+                    {/* Optional: Circle for visualizing coverage */}
+                    {demoInfrastructureData.map((site) => (
+                      <Circle
+                        key={`circle-${site.id}`}
+                        center={[site.lat, site.lng]}
+                        radius={80000} // radius in meters
+                        pathOptions={{ color: getMarkerColor(site.type), fillOpacity: 0.1 }}
+                      />
+                    ))}
+                  </MapContainer>
                 </div>
               </CardContent>
             </Card>
@@ -244,14 +320,30 @@ const Demo = () => {
                   </TabsList>
                   
                   <TabsContent value="distribution" className="space-y-4 mt-4">
-                    <div className="h-64 bg-gradient-to-br from-hydrogen-green/10 to-tech-blue/10 rounded-xl border border-border/50 flex items-center justify-center">
-                      <div style={{ textAlign: "center" }}>
-                        <Database className="h-12 w-12 text-hydrogen-green mx-auto mb-4 opacity-50" />
-                        <h3 className="text-lg font-semibold text-foreground mb-2">Distribution Chart</h3>
-                        <p className="text-muted-foreground">Production: {demoChartData[0].value} MW</p>
-                        <p className="text-muted-foreground">Storage: {demoChartData[1].value} MW</p>
-                        <p className="text-muted-foreground">Distribution: {demoChartData[2].value} MW</p>
-                      </div>
+                    <div className="h-64 bg-gradient-to-br from-hydrogen-green/10 to-tech-blue/10 rounded-xl border border-border/50">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={demoChartData}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                          <XAxis 
+                            dataKey="name" 
+                            stroke="rgba(255,255,255,0.7)"
+                            fontSize={12}
+                          />
+                          <YAxis 
+                            stroke="rgba(255,255,255,0.7)"
+                            fontSize={12}
+                          />
+                          <Tooltip 
+                            contentStyle={{
+                              backgroundColor: 'rgba(0,0,0,0.8)',
+                              border: '1px solid rgba(255,255,255,0.2)',
+                              borderRadius: '8px',
+                              color: 'white'
+                            }}
+                          />
+                          <Bar dataKey="value" fill="#10b981" radius={[4, 4, 0, 0]} />
+                        </BarChart>
+                      </ResponsiveContainer>
                     </div>
                     <div className="text-center text-muted-foreground">
                       <p>Infrastructure capacity by type (MW)</p>
@@ -259,13 +351,38 @@ const Demo = () => {
                   </TabsContent>
                   
                   <TabsContent value="efficiency" className="space-y-4 mt-4">
-                    <div className="h-64 bg-gradient-to-br from-success-emerald/10 to-hydrogen-green/10 rounded-xl border border-border/50 flex items-center justify-center">
-                      <div style={{ textAlign: "center" }}>
-                        <Activity className="h-12 w-12 text-success-emerald mx-auto mb-4 opacity-50" />
-                        <h3 className="text-lg font-semibold text-foreground mb-2">Efficiency Trends</h3>
-                        <p className="text-muted-foreground">{demoEfficiencyData.length} months of data</p>
-                        <p className="text-muted-foreground">Range: 82% - 92%</p>
-                      </div>
+                    <div className="h-64 bg-gradient-to-br from-success-emerald/10 to-hydrogen-green/10 rounded-xl border border-border/50">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={demoEfficiencyData}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                          <XAxis 
+                            dataKey="month" 
+                            stroke="rgba(255,255,255,0.7)"
+                            fontSize={12}
+                          />
+                          <YAxis 
+                            stroke="rgba(255,255,255,0.7)"
+                            fontSize={12}
+                            domain={[75, 95]}
+                          />
+                          <Tooltip 
+                            contentStyle={{
+                              backgroundColor: 'rgba(0,0,0,0.8)',
+                              border: '1px solid rgba(255,255,255,0.2)',
+                              borderRadius: '8px',
+                              color: 'white'
+                            }}
+                          />
+                          <Line 
+                            type="monotone" 
+                            dataKey="efficiency" 
+                            stroke="#10b981" 
+                            strokeWidth={3}
+                            dot={{ fill: '#10b981', strokeWidth: 2, r: 4 }}
+                            activeDot={{ r: 6, stroke: '#10b981', strokeWidth: 2 }}
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
                     </div>
                     <div className="text-center text-muted-foreground">
                       <p>Monthly efficiency trends (%)</p>

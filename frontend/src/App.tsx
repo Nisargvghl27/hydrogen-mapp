@@ -8,7 +8,13 @@ import Footer from "@/components/Footer";
 import Index from "./pages/Index";
 import Platform from "./pages/Platform";
 import Demo from "./pages/Demo";
+import Optimization from "./pages/Optimization";
+import Mapping from "./pages/Mapping";
+import Investments from "./pages/Investments";
 import NotFound from "./pages/NotFound";
+import Documentation from "./pages/Documentation";
+import "leaflet/dist/leaflet.css";
+
 
 const queryClient = new QueryClient();
 
@@ -25,6 +31,10 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/platform" element={<Platform />} />
               <Route path="/demo" element={<Demo />} />
+              <Route path="/optimization" element={<Optimization />} />
+              <Route path="/mapping" element={<Mapping />} />
+              <Route path="/investments" element={<Investments />} />
+              <Route path="/documentation" element={<Documentation />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

@@ -21,7 +21,9 @@ const UseCases = () => {
         "ROI optimization",
         "Regulatory compliance mapping"
       ],
-      color: "border-hydrogen-green"
+      color: "border-hydrogen-green",
+      learnMoreUrl: "https://www.iea.org/topics/hydrogen",
+      learnMoreText: "IEA Hydrogen"
     },
     {
       icon: Landmark,
@@ -33,7 +35,9 @@ const UseCases = () => {
         "Regional development prioritization",
         "Environmental impact analysis"
       ],
-      color: "border-tech-blue"
+      color: "border-tech-blue",
+      learnMoreUrl: "https://www.irena.org/publications/2023/Jul/Global-hydrogen-trade-to-meet-the-1-5C-climate-goal",
+      learnMoreText: "IRENA Reports"
     },
     {
       icon: Users,
@@ -45,7 +49,9 @@ const UseCases = () => {
         "Demand forecasting integration",
         "Environmental constraint mapping"
       ],
-      color: "border-success-emerald"
+      color: "border-success-emerald",
+      learnMoreUrl: "https://www.hydrogencouncil.com/en/publications/",
+      learnMoreText: "Hydrogen Council"
     }
   ];
 
@@ -59,7 +65,7 @@ const UseCases = () => {
   ];
 
   return (
-    <section className="py-24 bg-background">
+    <section id="use-cases" className="py-24 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
@@ -102,10 +108,14 @@ const UseCases = () => {
                   </ul>
                 </div>
 
-                <Button variant="outline" className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                  Learn More
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
+                                 <Button 
+                   variant="outline" 
+                   className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
+                   onClick={() => window.open(userType.learnMoreUrl, '_blank', 'noopener,noreferrer')}
+                 >
+                   {userType.learnMoreText}
+                   <ArrowRight className="w-4 h-4" />
+                 </Button>
               </CardContent>
             </Card>
           ))}

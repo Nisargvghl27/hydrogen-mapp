@@ -7,10 +7,24 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MapPin, TrendingUp, Zap, Target, Database, Activity, Layers, Filter } from "lucide-react";
 import "leaflet/dist/leaflet.css";
+import "leaflet.heat";
+import { useMap } from "react-leaflet";
+
+// Define types for infrastructure data
+interface InfrastructureSite {
+  id: number;
+  name: string;
+  type: string;
+  lat: number;
+  lng: number;
+  capacity: number;
+  status: string;
+  efficiency: number;
+}
 
 // Fix for default markers in react-leaflet
 import L from "leaflet";
-delete (L.Icon.Default.prototype as any)._getIconUrl;
+delete (L.Icon.Default.prototype as { _getIconUrl?: () => string })._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
   iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
@@ -18,7 +32,7 @@ L.Icon.Default.mergeOptions({
 });
 
 // Mock data for demonstration (since database is empty)
-const mockInfrastructureData = [
+const mockInfrastructureData: InfrastructureSite[] = [
   {
     id: 1,
     name: "Solar Hydrogen Plant",
@@ -67,7 +81,7 @@ const efficiencyData = [
 ];
 
 const Platform = () => {
-  const [selectedSite, setSelectedSite] = useState<any>(null);
+  const [selectedSite, setSelectedSite] = useState<InfrastructureSite | null>(null);
 
   useEffect(() => {
     console.log("Platform component mounted");
@@ -101,7 +115,7 @@ const Platform = () => {
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground mb-6">
               Hydrogen Infrastructure
               <span className="block bg-gradient-to-r from-hydrogen-green to-tech-blue bg-clip-text text-transparent">
-                Mapping Platform
+                MAPPING Platform
               </span>
             </h1>
             
@@ -172,21 +186,45 @@ const Platform = () => {
               <CardContent>
                 <div className="h-96 w-full rounded-xl overflow-hidden border border-border/50">
                   {/* Temporary map replacement for debugging */}
-                  <div style={{ 
-                    height: "100%", 
-                    width: "100%", 
-                    background: "linear-gradient(135deg, hsl(142 76% 36% / 0.1), hsl(221 83% 53% / 0.1))", 
-                    display: "flex", 
-                    alignItems: "center", 
-                    justifyContent: "center",
-                    border: "2px dashed hsl(142 76% 36% / 0.3)"
-                  }}>
-                    <div style={{ textAlign: "center" }}>
-                      <MapPin className="h-12 w-12 text-hydrogen-green mx-auto mb-4 opacity-50" />
-                      <h3 className="text-lg font-semibold text-foreground mb-2">Map Placeholder</h3>
-                      <p className="text-muted-foreground">Interactive map component</p>
-                    </div>
-                  </div>
+                <MapContainer 
+                  center={[22.5, 78.9]} 
+                  zoom={5} 
+                  style={{ height: "100%", width: "100%" }}
+                >
+                  <TileLayer
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  />
+  
+                  {/* Render infrastructure markers */}
+                  {mockInfrastructureData.map((site) => (
+                    <Marker
+                      key={site.id}
+                      position={[site.lat, site.lng]}
+                      eventHandlers={{
+                        click: () => setSelectedSite(site),
+                      }}
+                    >
+                      <Popup>
+                      <div>
+                        <strong>{site.name}</strong><br/>
+                          Type: {site.type}<br/>
+                          Status: {site.status}
+                        </div>
+                      </Popup>
+                    </Marker>
+                  ))}
+
+                  {/* Optional: Circle for visualizing coverage */}
+                  {mockInfrastructureData.map((site) => (
+                    <Circle
+                      key={`circle-${site.id}`}
+                      center={[site.lat, site.lng]}
+                      radius={50000} // radius in meters
+                      pathOptions={{ color: getMarkerColor(site.type), fillOpacity: 0.1 }}
+                    />
+                  ))}
+                </MapContainer>
                 </div>
               </CardContent>
             </Card>
