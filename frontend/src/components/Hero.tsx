@@ -1,10 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { MapPin, Zap, Target, TrendingUp } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import heroImage from "@/assets/hero-hydrogen-infrastructure.jpg";
 
 const Hero = () => {
+  const navigate = useNavigate();
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden py-12 sm:py-16 lg:py-20">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <img 
@@ -16,33 +19,43 @@ const Hero = () => {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
-        <div className="text-white space-y-8">
-          <div className="space-y-4">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+        <div className="text-white space-y-6 lg:space-y-8">
+          <div className="space-y-3 lg:space-y-4">
             <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
               <Zap className="w-4 h-4 text-hydrogen-green" />
               <span>Next-Generation Infrastructure Planning</span>
             </div>
             
-            <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
               Green Hydrogen
               <span className="block bg-gradient-to-r from-hydrogen-green to-tech-blue bg-clip-text text-transparent">
                 Infrastructure Mapping
               </span>
             </h1>
             
-            <p className="text-xl text-white/90 leading-relaxed max-w-2xl">
+            <p className="text-lg sm:text-xl text-white/90 leading-relaxed max-w-2xl">
               Advanced geospatial analytics platform for optimizing green hydrogen infrastructure development. 
               Make data-driven investment decisions with comprehensive mapping and site suitability analysis.
             </p>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4">
-            <Button variant="hero" size="lg" className="group">
+            <Button 
+              variant="hero" 
+              size="lg" 
+              className="group"
+              onClick={() => navigate('/platform')}
+            >
               Access Platform
               <MapPin className="w-5 h-5 group-hover:scale-110 transition-transform" />
             </Button>
-            <Button variant="outline" size="lg" className="border-white/30 text-white hover:bg-white/10">
+            <Button 
+              variant="ghost" 
+              size="lg" 
+              className="border border-white/30 text-white bg-transparent hover:bg-white/10 hover:text-white hover:border-white/50 transition-all duration-300"
+              onClick={() => navigate('/demo')}
+            >
               View Demo
             </Button>
           </div>
@@ -50,15 +63,15 @@ const Hero = () => {
           {/* Key Stats */}
           <div className="grid grid-cols-3 gap-6 pt-8 border-t border-white/20">
             <div className="text-center">
-              <div className="text-2xl font-bold text-hydrogen-green">500+</div>
+              <div className="text-2xl font-bold text-hydrogen-green">0</div>
               <div className="text-sm text-white/80">Infrastructure Sites</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-tech-blue">25+</div>
+              <div className="text-2xl font-bold text-tech-blue">0</div>
               <div className="text-sm text-white/80">Data Layers</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-success-emerald">98%</div>
+              <div className="text-2xl font-bold text-success-emerald">0%</div>
               <div className="text-sm text-white/80">Accuracy Rate</div>
             </div>
           </div>
