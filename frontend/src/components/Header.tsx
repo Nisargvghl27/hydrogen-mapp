@@ -1,11 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Zap, Menu, Mail } from "lucide-react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const navigation = [
     { name: "Platform", href: "/platform" },
@@ -15,6 +16,8 @@ const Header = () => {
     { name: "Use Cases", href: "#use-cases" },
     { name: "Contact Us", href: "#footer" }
   ];
+
+
 
   const handleNavigation = (href: string) => {
     if (href.startsWith('/')) {
@@ -34,6 +37,15 @@ const Header = () => {
         }
       }
       setIsMenuOpen(false);
+    }
+  };
+
+  const isActivePage = (href: string) => {
+    if (href.startsWith('/')) {
+      return window.location.pathname === href;
+    } else {
+      // Remove default active state for anchor links
+      return false;
     }
   };
 
@@ -58,14 +70,19 @@ const Header = () => {
               <button
                 key={item.name}
                 onClick={() => handleNavigation(item.href)}
-                className={`transition-all duration-300 font-medium flex items-center space-x-2 ${
+                className={`transition-all duration-300 font-medium flex items-center space-x-2 relative ${
                   item.name === "Contact Us" 
                     ? "text-hydrogen-green hover:text-hydrogen-green/80 hover:scale-105" 
+                    : isActivePage(item.href)
+                    ? "text-hydrogen-green font-semibold"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {item.name === "Contact Us" && <Mail className="w-4 h-4" />}
                 <span>{item.name}</span>
+                {isActivePage(item.href) && (
+                  <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-hydrogen-green rounded-full"></div>
+                )}
               </button>
             ))}
           </nav>
@@ -90,6 +107,8 @@ const Header = () => {
                   className={`text-left transition-all duration-300 font-medium flex items-center space-x-2 ${
                     item.name === "Contact Us" 
                       ? "text-hydrogen-green hover:text-hydrogen-green/80 hover:scale-105" 
+                      : isActivePage(item.href)
+                      ? "text-hydrogen-green font-semibold"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
