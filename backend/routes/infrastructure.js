@@ -50,12 +50,12 @@ router.get('/type/:type', asyncHandler(async (req, res) => {
   res.json({ success: true, data: infrastructure, query: { type, count: infrastructure.length } });
 }));
 
-// @desc    Get infrastructure by category
-router.get('/category/:category', asyncHandler(async (req, res) => {
-  const { category } = req.params;
-  const infrastructure = await Infrastructure.find({ category }).select('-__v');
-  res.json({ success: true, data: infrastructure, query: { category, count: infrastructure.length } });
-}));
+// @desc    Get infrastructure by category (removed - simplified schema)
+// router.get('/category/:category', asyncHandler(async (req, res) => {
+//   const { category } = req.params;
+//   const infrastructure = await Infrastructure.find({ category }).select('-__v');
+//   res.json({ success: true, data: infrastructure, query: { category, count: infrastructure.length } });
+// }));
 
 // @desc    Get infrastructure by status
 router.get('/status/:status', asyncHandler(async (req, res) => {
@@ -74,36 +74,36 @@ router.get('/region/:country/:state?', asyncHandler(async (req, res) => {
   res.json({ success: true, data: infrastructure, query: { country, state: state || 'all', count: infrastructure.length } });
 }));
 
-// @desc    Get demand centers by industry type
-router.get('/demand-centers/industry/:industryType', asyncHandler(async (req, res) => {
-  const { industryType } = req.params;
-  const demandCenters = await Infrastructure.findDemandCentersByIndustry(industryType); // ✅ custom model method
-  res.json({ success: true, data: demandCenters, query: { industryType, count: demandCenters.length } });
-}));
+// @desc    Get demand centers by industry type (removed - simplified schema)
+// router.get('/demand-centers/industry/:industryType', asyncHandler(async (req, res) => {
+//   const { industryType } = req.params;
+//   const demandCenters = await Infrastructure.findDemandCentersByIndustry(industryType); // ✅ custom model method
+//   res.json({ success: true, data: demandCenters, query: { industryType, count: demandCenters.length } });
+// }));
 
-// @desc    Get demand centers with hydrogen demand criteria
-router.get('/demand-centers/criteria', asyncHandler(async (req, res) => {
-  const { minDemand, maxDemand, demandType, industryType } = req.query;
-  const query = { type: 'demand-center' };
+// @desc    Get demand centers with hydrogen demand criteria (removed - simplified schema)
+// router.get('/demand-centers/criteria', asyncHandler(async (req, res) => {
+//   const { minDemand, maxDemand, demandType, industryType } = req.query;
+//   const query = { type: 'demand-center' };
 
-  if (minDemand || maxDemand) {
-    query['demandCenterFields.hydrogenDemand.current'] = {};
-    if (minDemand) query['demandCenterFields.hydrogenDemand.current'].$gte = Number(minDemand);
-    if (maxDemand) query['demandCenterFields.hydrogenDemand.current'].$lte = Number(maxDemand);
-  }
-  if (demandType) query['demandCenterFields.demandType'] = demandType;
-  if (industryType) query['demandCenterFields.industryType'] = industryType;
+//   if (minDemand || maxDemand) {
+//     query['demandCenterFields.hydrogenDemand.current'] = {};
+//     if (minDemand) query['demandcenters.hydrogenDemand.current'].$gte = Number(minDemand);
+//     if (maxDemand) query['demandCenterFields.hydrogenDemand.current'].$lte = Number(maxDemand);
+//   }
+//   if (demandType) query['demandCenterFields.demandType'] = demandType;
+//   if (industryType) query['demandCenterFields.industryType'] = industryType;
 
-  const demandCenters = await Infrastructure.find(query).select('-__v');
-  res.json({ success: true, data: demandCenters, query: { type: 'demand-center', criteria: { minDemand, maxDemand, demandType, industryType }, count: demandCenters.length } });
-}));
+//   const demandCenters = await Infrastructure.find(query).select('-__v');
+//   res.json({ success: true, data: demandCenters, query: { type: 'demand-center', criteria: { minDemand, maxDemand, demandType, industryType }, count: demandCenters.length } });
+// }));
 
-// @desc    Get pipelines by commodity
-router.get('/pipelines/commodity/:commodity', asyncHandler(async (req, res) => {
-  const { commodity } = req.params;
-  const pipelines = await Infrastructure.find({ type: 'pipeline', 'pipelineFields.commodity': commodity }).select('-__v');
-  res.json({ success: true, data: pipelines, query: { type: 'pipeline', commodity, count: pipelines.length } });
-}));
+// @desc    Get pipelines by commodity (removed - simplified schema)
+// router.get('/pipelines/commodity/:commodity', asyncHandler(async (req, res) => {
+//   const { commodity } = req.params;
+//   const pipelines = await Infrastructure.find({ type: 'pipeline', 'pipelineFields.commodity': commodity }).select('-__v');
+//   res.json({ success: true, data: pipelines, query: { type: 'pipeline', commodity, count: pipelines.length } });
+// }));
 
 // @desc    Get transport infrastructure by type
 router.get('/transport/:transportType', asyncHandler(async (req, res) => {
@@ -112,41 +112,32 @@ router.get('/transport/:transportType', asyncHandler(async (req, res) => {
   res.json({ success: true, data: transportInfra, query: { type: transportType, count: transportInfra.length } });
 }));
 
-// @desc    Get storage facilities by type
-router.get('/storage/type/:storageType', asyncHandler(async (req, res) => {
-  const { storageType } = req.params;
-  const storageFacilities = await Infrastructure.find({ type: 'storage-facility', 'storageFields.storageType': storageType }).select('-__v');
-  res.json({ success: true, data: storageFacilities, query: { type: 'storage-facility', storageType, count: storageFacilities.length } });
-}));
+// @desc    Get storage facilities by type (removed - simplified schema)
+// router.get('/storage/type/:storageType', asyncHandler(async (req, res) => {
+//   const { storageType } = req.params;
+//   const storageFacilities = await Infrastructure.find({ type: 'storage-facility', 'storageFields.storageType': storageType }).select('-__v');
+//   res.json({ success: true, data: storageFacilities, query: { type: 'storage-facility', storageType, count: storageFacilities.length } });
+// }));
 
-// @desc    Get refueling stations by fuel type
-router.get('/refueling/fuel/:fuelType', asyncHandler(async (req, res) => {
-  const { fuelType } = req.params;
-  const refuelingStations = await Infrastructure.find({ type: 'refueling-station', 'refuelingFields.fuelTypes': fuelType }).select('-__v');
-  res.json({ success: true, data: refuelingStations, query: { type: 'refueling-station', fuelType, count: refuelingStations.length } });
-}));
+// @desc    Get refueling stations by fuel type (removed - simplified schema)
+// router.get('/refueling/fuel/:fuelType', asyncHandler(async (req, res) => {
+//   const { fuelType } = req.params;
+//   const refuelingStations = await Infrastructure.find({ type: 'refueling-station', 'refuelingFields.fuelTypes': fuelType }).select('-__v');
+//   res.json({ success: true, data: refuelingStations, query: { type: 'refueling-station', fuelType, count: refuelingStations.length } });
+// }));
 
 // @desc    Get infrastructure statistics
 router.get('/stats/overview', asyncHandler(async (req, res) => {
   const stats = await Infrastructure.aggregate([{ $group: { _id: null, totalInfrastructure: { $sum: 1 } } }]);
   const typeStats = await Infrastructure.aggregate([{ $group: { _id: '$type', count: { $sum: 1 } } }]);
-  const categoryStats = await Infrastructure.aggregate([{ $group: { _id: '$category', count: { $sum: 1 } } }]);
   const statusStats = await Infrastructure.aggregate([{ $group: { _id: '$status', count: { $sum: 1 } } }]);
   const countryStats = await Infrastructure.aggregate([
     { $group: { _id: '$address.country', count: { $sum: 1 } } },
     { $sort: { count: -1 } },
     { $limit: 10 }
   ]);
-  const demandCenterStats = await Infrastructure.aggregate([
-    { $match: { type: 'demand-center' } },
-    { $group: { _id: null, totalDemand: { $sum: '$demandCenterFields.hydrogenDemand.current' }, avgDemand: { $avg: '$demandCenterFields.hydrogenDemand.current' }, count: { $sum: 1 } } }
-  ]);
-  const pipelineStats = await Infrastructure.aggregate([
-    { $match: { type: 'pipeline' } },
-    { $group: { _id: '$pipelineFields.commodity', count: { $sum: 1 }, totalLength: { $sum: '$pipelineFields.length' } } }
-  ]);
 
-  res.json({ success: true, data: { overview: stats[0] || {}, byType: typeStats, byCategory: categoryStats, byStatus: statusStats, byCountry: countryStats, demandCenters: demandCenterStats[0] || {}, pipelines: pipelineStats } });
+  res.json({ success: true, data: { overview: stats[0] || {}, byType: typeStats, byStatus: statusStats, byCountry: countryStats } });
 }));
 
 // @desc    Search infrastructure
@@ -156,24 +147,24 @@ router.get('/search/:query', asyncHandler(async (req, res) => {
   res.json({ success: true, data: infrastructure, query, count: infrastructure.length });
 }));
 
-// @desc    Get infrastructure connectivity analysis
-router.get('/connectivity/:id', asyncHandler(async (req, res) => {
-  const infra = await Infrastructure.findById(req.params.id);
-  if (!infra) return res.status(404).json({ success: false, error: 'Infrastructure not found' });
+// @desc    Get infrastructure connectivity analysis (removed - simplified schema)
+// router.get('/connectivity/:id', asyncHandler(async (req, res) => {
+//   const infra = await Infrastructure.findById(req.params.id);
+//   if (!infra) return res.status(404).json({ success: false, error: 'Infrastructure not found' });
 
-  const connectivity = {
-    roadAccess: infra.connectivity?.roadAccess || false,
-    railAccess: infra.connectivity?.railAccess || false,
-    waterAccess: infra.connectivity?.waterAccess || false,
-    airAccess: infra.connectivity?.airAccess || false,
-    internetConnectivity: infra.connectivity?.internetConnectivity || false,
-    powerGridConnection: infra.connectivity?.powerGridConnection || false
-  };
-  const connectivityScore = Object.values(connectivity).filter(Boolean).length;
-  const maxScore = Object.keys(connectivity).length;
+//   const connectivity = {
+//     roadAccess: infra.connectivity?.roadAccess || false,
+//     railAccess: infra.connectivity?.railAccess || false,
+//     waterAccess: infra.connectivity?.waterAccess || false,
+//     airAccess: infra.connectivity?.airAccess || false,
+//     internetConnectivity: infra.connectivity?.internetConnectivity || false,
+//     powerGridConnection: infra.connectivity?.powerGridConnection || false
+//   };
+//   const connectivityScore = Object.values(connectivity).filter(Boolean).length;
+//   const maxScore = Object.keys(connectivity).length;
 
-  res.json({ success: true, data: { infrastructure: { id: infra._id, name: infra.name, type: infra.type, location: infra.location }, connectivity, connectivityScore, maxScore, percentage: Math.round((connectivityScore / maxScore) * 100) } });
-}));
+//   res.json({ success: true, data: { infrastructure: { id: infra._id, name: infra.name, type: infra.type, location: infra.location }, connectivity, connectivityScore, maxScore, percentage: Math.round((connectivityScore / maxScore) * 100) } });
+// }));
 
 // @desc    Bulk create infrastructure
 router.post('/bulk', asyncHandler(async (req, res) => {
@@ -189,11 +180,10 @@ router.post('/bulk', asyncHandler(async (req, res) => {
 
 // @desc    Get all infrastructure (pagination + filtering)
 router.get('/', validateQuery('queryParams'), asyncHandler(async (req, res) => {
-  const { page = 1, limit = 10, sort = 'createdAt', order = 'desc', search, type, category, status, country, region } = req.query;
+  const { page = 1, limit = 10, sort = 'createdAt', order = 'desc', search, type, status, country, region } = req.query;
   const query = {};
   if (search) query.$text = { $search: search };
   if (type) query.type = type;
-  if (category) query.category = category;
   if (status) query.status = status;
   if (country) query['address.country'] = country;
   if (region) query['address.state'] = region;

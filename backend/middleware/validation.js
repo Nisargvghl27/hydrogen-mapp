@@ -242,94 +242,19 @@ const schemas = {
   createInfrastructure: Joi.object({
     name: Joi.string().required().trim().min(2).max(100),
     type: Joi.string().valid('pipeline', 'road', 'railway', 'port', 'airport', 'demand-center', 'storage-facility', 'refueling-station').required(),
-    category: Joi.string().valid('transport', 'energy', 'industrial', 'commercial', 'residential').required(),
     status: Joi.string().valid('operational', 'under-construction', 'planned', 'decommissioned', 'maintenance'),
     location: Joi.object({
       type: Joi.string().valid('Point', 'LineString', 'Polygon').default('Point'),
       coordinates: Joi.any().required()
     }).required(),
     address: Joi.object({
-      street: Joi.string().trim(),
       city: Joi.string().trim(),
       state: Joi.string().trim(),
-      country: Joi.string().trim(),
-      postalCode: Joi.string().trim()
-    }),
-    pipelineFields: Joi.object({
-      diameter: Joi.number().positive(),
-      material: Joi.string().valid('steel', 'plastic', 'composite', 'other'),
-      pressure: Joi.number().positive(),
-      flowCapacity: Joi.number().positive(),
-      commodity: Joi.string().valid('hydrogen', 'natural-gas', 'oil', 'water', 'other'),
-      length: Joi.number().positive(),
-      startPoint: Joi.object({
-        type: Joi.string().valid('Point').default('Point'),
-        coordinates: Joi.array().items(Joi.number()).length(2)
-      }),
-      endPoint: Joi.object({
-        type: Joi.string().valid('Point').default('Point'),
-        coordinates: Joi.array().items(Joi.number()).length(2)
-      })
-    }),
-    demandCenterFields: Joi.object({
-      demandType: Joi.string().valid('industrial', 'transport', 'power-generation', 'residential', 'commercial', 'agricultural'),
-      hydrogenDemand: Joi.object({
-        current: Joi.number().positive(),
-        projected: Joi.number().positive(),
-        unit: Joi.string().default('tons/day')
-      }),
-      industryType: Joi.string().valid('steel', 'cement', 'chemicals', 'refining', 'glass', 'food-processing', 'other'),
-      operationalHours: Joi.number().min(0).max(24),
-      seasonalVariation: Joi.string().valid('none', 'low', 'medium', 'high')
-    }),
-    connectivity: Joi.object({
-      roadAccess: Joi.boolean(),
-      railAccess: Joi.boolean(),
-      waterAccess: Joi.boolean(),
-      airAccess: Joi.boolean(),
-      internetConnectivity: Joi.boolean(),
-      powerGridConnection: Joi.boolean()
-    }),
-    environmentalImpact: Joi.object({
-      landUse: Joi.number().positive(),
-      noiseLevel: Joi.number().positive(),
-      airQualityImpact: Joi.string().valid('low', 'medium', 'high'),
-      waterQualityImpact: Joi.string().valid('low', 'medium', 'high')
-    }),
-    performance: Joi.object({
-      availability: Joi.number().min(0).max(100),
-      efficiency: Joi.number().min(0).max(100),
-      throughput: Joi.number().positive(),
-      throughputUnit: Joi.string(),
-      downtime: Joi.number().positive(),
-      maintenanceFrequency: Joi.number().positive()
-    }),
-    financial: Joi.object({
-      capitalCost: Joi.number().positive(),
-      operationalCost: Joi.number().positive(),
-      maintenanceCost: Joi.number().positive(),
-      revenue: Joi.number().positive(),
-      currency: Joi.string().default('USD')
-    }),
-    timeline: Joi.object({
-      startDate: Joi.date(),
-      completionDate: Joi.date(),
-      operationalDate: Joi.date(),
-      expectedLifespan: Joi.number().positive(),
-      lastMaintenance: Joi.date(),
-      nextMaintenance: Joi.date()
-    }),
-    contact: Joi.object({
-      owner: Joi.string().trim(),
-      operator: Joi.string().trim(),
-      email: Joi.string().email(),
-      phone: Joi.string().trim(),
-      website: Joi.string().uri()
+      country: Joi.string().trim()
     }),
     metadata: Joi.object({
       dataSource: Joi.string().trim(),
-      accuracy: Joi.string().valid('high', 'medium', 'low'),
-      updateFrequency: Joi.string().valid('real-time', 'hourly', 'daily', 'weekly', 'monthly', 'yearly')
+      accuracy: Joi.string().valid('high', 'medium', 'low')
     })
   }),
 
