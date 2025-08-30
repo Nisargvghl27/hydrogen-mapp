@@ -12,7 +12,8 @@ const Header = () => {
     { name: "Demo", href: "/demo" },
     { name: "Documentation", href: "/documentation" },
     { name: "Features", href: "#features" },
-    { name: "Use Cases", href: "#use-cases" }
+    { name: "Use Cases", href: "#use-cases" },
+    { name: "Contact Us", href: "#footer" }
   ];
 
   const handleNavigation = (href: string) => {
@@ -20,10 +21,17 @@ const Header = () => {
       navigate(href);
       setIsMenuOpen(false);
     } else {
-      // Handle anchor links
-      const element = document.querySelector(href);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Handle anchor links - first navigate to home page if not already there
+      const currentPath = window.location.pathname;
+      if (currentPath !== '/') {
+        // If not on home page, navigate to home first, then scroll to section
+        navigate('/', { state: { scrollTo: href } });
+      } else {
+        // If already on home page, just scroll to section
+        const element = document.querySelector(href);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       }
       setIsMenuOpen(false);
     }
