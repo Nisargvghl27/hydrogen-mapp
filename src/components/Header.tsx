@@ -41,16 +41,6 @@ const Header = () => {
             ))}
           </nav>
 
-          {/* CTA Buttons */}
-          <div className="hidden md:flex items-center space-x-4">
-            <Button variant="ghost" size="sm">
-              Login
-            </Button>
-            <Button variant="hero" size="sm">
-              Get Access
-            </Button>
-          </div>
-
           {/* Mobile Menu Button */}
           <button
             className="md:hidden p-2 text-muted-foreground hover:text-foreground"
@@ -74,14 +64,6 @@ const Header = () => {
                   {item.name}
                 </a>
               ))}
-              <div className="flex flex-col space-y-2 pt-4 border-t border-border">
-                <Button variant="ghost" size="sm">
-                  Login
-                </Button>
-                <Button variant="hero" size="sm">
-                  Get Access
-                </Button>
-              </div>
             </nav>
           </div>
         )}
