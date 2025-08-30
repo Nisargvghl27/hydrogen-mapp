@@ -12,6 +12,7 @@ import Optimization from "./pages/Optimization";
 import Mapping from "./pages/Mapping";
 import Investments from "./pages/Investments";
 import NotFound from "./pages/NotFound";
+import Documentation from "./pages/Documentation";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +34,8 @@ const App = () => (
               <Route path="/investments" element={<Investments />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
+              <Route path="/documentation" element={<Documentation />} />
+
             </Routes>
           </main>
           <Footer />
